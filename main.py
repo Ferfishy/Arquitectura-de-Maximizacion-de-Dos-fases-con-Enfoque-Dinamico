@@ -17,7 +17,8 @@ import time
 import numpy as np
 
 from graph_utils import prepare_graph, generate_dummy_graph
-from phase1_celf import phase1_celf
+# from phase1_celf import phase1_celf
+from fase1_gnn import phase1_gnn
 from phase2_sis import phase2_sis_dynamic, compute_sustained_influence
 
 
@@ -25,13 +26,13 @@ from phase2_sis import phase2_sis_dynamic, compute_sustained_influence
 # Parámetros del experimento principal
 # ─────────────────────────────────────────────────────────────────────────────
 
-DATASET       = 'facebook_combined.txt'
+DATASET       = 'datasets/facebook_combined.txt'
 
 # Reproducibilidad
 SEED          = 42
 
 # Fase 1
-K_PRIME       = 150      # |V'|: candidatos seleccionados por Fase 1
+K_PRIME       = 20       # |V'|: candidatos seleccionados por Fase 1
 MC_FASE1      = 50       # MC por nodo en el barrido rápido
 
 # Fase 2
@@ -57,7 +58,7 @@ def main():
 
     print("=" * 60)
     print("  MAXIMIZACIÓN DE INFLUENCIA EN DOS FASES")
-    print("  Seminario de Título — Red Social Facebook SNAP")
+    print("  Proyecto de Título")
     print(f"  Parámetros: B={PRESUPUESTO}, D={DEADLINE}, "
           f"β={BETA}, δ={DELTA}, T={T_HORIZONTE}, seed={SEED}")
     print("=" * 60)
@@ -73,14 +74,13 @@ def main():
     print(f"\n  Grafo: {G.number_of_nodes():,} nodos, "
           f"{G.number_of_edges():,} aristas")
 
-    # ── Fase 1: Filtrado Voraz Estático ───────────────────────────────────────
+    # ── Fase 1: Filtrado Rápido con GNN ───────────────────────────────────────
     t0 = time.perf_counter()
 
-    candidatos = phase1_celf(
+    candidatos = phase1_gnn(
         G,
         k_prime=K_PRIME,
-        mc_simulations=MC_FASE1,
-        fast_mode=True          # O(|V|) — adecuado para 4.039 nodos
+        model_path='modelo_gnn.pth'
     )
 
     t1 = time.perf_counter()

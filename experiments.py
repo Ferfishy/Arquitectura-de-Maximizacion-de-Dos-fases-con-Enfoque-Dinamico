@@ -28,7 +28,7 @@ matplotlib.use('Agg')   # backend sin pantalla (compatible con todos los entorno
 import matplotlib.pyplot as plt
 
 from graph_utils import prepare_graph, sample_connected_subgraph
-from phase1_celf import phase1_celf
+from fase1_gnn import phase1_gnn
 from phase2_sis import phase2_sis_dynamic, compute_sustained_influence
 
 
@@ -37,7 +37,7 @@ from phase2_sis import phase2_sis_dynamic, compute_sustained_influence
 # ─────────────────────────────────────────────────────────────────────────────
 
 SEED        = 42       # reproducibilidad global
-DATASET     = 'facebook_combined.txt'
+DATASET     = 'datasets/facebook_combined.txt'
 
 # Fase 1
 K_PRIME     = 150      # candidatos seleccionados por la Fase 1 (≈3.7% de 4039)
@@ -92,8 +92,7 @@ def run_two_phase(G,
 
     # ── Fase 1 ──────────────────────────────────────────────────────────────
     t0 = time.perf_counter()
-    candidatos = phase1_celf(G, k_prime=k_prime, mc_simulations=mc_p1,
-                              fast_mode=True)
+    candidatos = phase1_gnn(G, k_prime=k_prime, model_path='modelo_gnn.pth')
     t1 = time.perf_counter()
     resultado['tiempo_fase1'] = t1 - t0
 

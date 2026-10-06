@@ -15,6 +15,7 @@ Funciones principales:
 
 import networkx as nx
 import numpy as np
+import pandas as pd
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -23,25 +24,24 @@ import numpy as np
 
 def load_graph_from_edgelist(filepath: str) -> nx.DiGraph:
     """
-    Carga un grafo no dirigido desde un archivo de lista de aristas en formato
-    SNAP (líneas con comentarios '#' y pares 'u v') y lo convierte a dirigido.
-
-    El dataset de Facebook SNAP está en formato no dirigido; al convertirlo
-    a DiGraph cada arista (u,v) genera tanto (u→v) como (v→u).
-
-    Parameters
-    ----------
-    filepath : str
-        Ruta al archivo de aristas (p. ej. 'facebook_combined.txt').
-
-    Returns
-    -------
-    nx.DiGraph
-        Grafo dirigido con nodos enteros.
+    Carga un grafo no dirigido desde un archivo y lo convierte a dirigido.
+    Soporta formato SNAP clásico (.txt) y modernos (.csv).
     """
-    # nx.read_edgelist ignora las líneas que empiezan con '#' por defecto.
-    G_und = nx.read_edgelist(filepath, create_using=nx.Graph(), nodetype=int,
-                              comments='#')
+    if filepath.lower().endswith('.csv'):
+        # Lee genéricamente las 2 primeras columnas sin importar el nombre del encabezado
+        df = pd.read_csv(filepath)
+        source_col = df.columns[0]
+        target_col = df.columns[1]
+        G_und = nx.from_pandas_edgelist(df, source=source_col, target=target_col, create_using=nx.Graph())
+        
+        # Aseguramos que los identificadores de nodo se transformen a enteros si es posible
+        mapping = {n: int(n) for n in G_und.nodes() if str(n).lstrip('-').isdigit()}
+        if mapping:
+            nx.relabel_nodes(G_und, mapping, copy=False)
+    else:
+        # Formato clásico txt
+        G_und = nx.read_edgelist(filepath, create_using=nx.Graph(), nodetype=int, comments='#')
+        
     G = G_und.to_directed()
     return G
 
@@ -242,7 +242,7 @@ def generate_dummy_graph(n: int = 100,
 if __name__ == '__main__':
     import os
 
-    DATASET = 'facebook_combined.txt'
+    DATASET = 'datasets/facebook_combined.txt'
     if os.path.exists(DATASET):
         G = prepare_graph(DATASET, seed=42)
         # Verificar algunos atributos

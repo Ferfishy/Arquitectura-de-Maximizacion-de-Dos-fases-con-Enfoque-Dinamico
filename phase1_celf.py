@@ -247,7 +247,7 @@ if __name__ == '__main__':
     import os
     from graph_utils import prepare_graph, generate_dummy_graph
 
-    DATASET = 'facebook_combined.txt'
+    DATASET = 'datasets/facebook_combined.txt'
     if os.path.exists(DATASET):
         G = prepare_graph(DATASET, seed=42)
         # Prueba con fast_mode en el grafo completo
