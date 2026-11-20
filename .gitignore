@@ -1,6 +1,8 @@
 venv/
 venv_dl/
 *.csv
-datasets/
+datasets/*
+!datasets/.gitkeep
 *.pth
+!modelo_gnn.pth
 __pycache__/
