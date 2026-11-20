@@ -1,4 +1,4 @@
-# Arquitectura de Maximización de Influencia en Dos Fases con Enfoque Dinámico
+# Arquitectura de Maximización de Influencia en Dos Fases
 
 Repositorio oficial del Proyecto de Título. Este software implementa una arquitectura híbrida (**Deep Learning sobre Grafos + Optimización Submodular Vectorizada**) para resolver el problema de **Maximización de Influencia Sostenida** bajo restricciones de presupuesto ($B$) y horizonte de decisión ($D$) en redes complejas de gran escala.
 
